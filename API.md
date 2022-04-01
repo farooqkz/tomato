@@ -2,7 +2,7 @@
 
 ### GET `/dot.png`
 
-Increase hit count for the referrer page by one.
+Increase hit count for the referer page by one.
 
 ### GET `/whoami`
 
