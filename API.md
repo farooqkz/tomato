@@ -32,6 +32,10 @@ Stats object is an object like this:
 
 To be documented.
 
+### GET `/os`
+
+To be documented.
+
 ### GET `/login`
 
 Get the login method.
