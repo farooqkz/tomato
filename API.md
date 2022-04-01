@@ -32,6 +32,18 @@ Stats object is an object like this:
 
 To be documented.
 
+### GET `/login`
+
+Get the login method.
+
+```json
+{ "method": "open|auth" }
+```
+
+`auth` means this instance requires authentication to access statistics data.
+
+And `open` means anyone can access the statistics data.
+
 ### POST `/login`
 
 Log in for the admin:
@@ -48,6 +60,8 @@ Response is:
 ```json
 { "logged_in": "success|fail" }
 ```
+
+If login method for the server has been configured as `open`, this endpoint always returns `success` and changes the session data accordingly.
 
 ### GET `/logout`
 
