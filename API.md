@@ -21,7 +21,7 @@ Stats object is an object like this:
 
 ```json
 {
-  "total": 1400,
+  "10y": 1400,
   "24h": 400,
   "1w": 500,
   "1m": 900
