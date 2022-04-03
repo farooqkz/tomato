@@ -14,17 +14,13 @@ Returns
 
 ### GET `/stats`
 
-Returns an object which for each entry, the key is the URL and the value
-is a Stats object.
+Returns an object which for each entry, the key is the URL and the total hit of the URL.
 
-Stats object is an object like this:
+Example:
 
 ```json
 {
-  "10y": 1400,
-  "24h": 400,
-  "1w": 500,
-  "1m": 900
+  "http://far.chickenkiller.com/": 1000
 }
 ```
 
