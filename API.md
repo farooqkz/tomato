@@ -24,13 +24,20 @@ Example:
 }
 ```
 
-### GET `/browsers`
 
-To be documented.
+There is also a special `total` entry showing the sum from all pages.
 
-### GET `/os`
 
-To be documented.
+### GET `/useragent/<text>`
+
+greps between useragent strings for `<text>`. Resulting in a JSON with count of found and count of total:
+
+```json
+{
+  "result": 3,
+  "total": 5
+}
+```
 
 ### GET `/login`
 
