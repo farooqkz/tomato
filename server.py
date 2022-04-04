@@ -30,7 +30,7 @@ def get_env():
 
 def get_db(db_name):
     if getattr(g, f"db_{db_name}", None) is None:
-        setattr(g, f"db_{db_name}", get_env().open(db_name.encode()))
+        setattr(g, f"db_{db_name}", get_env().open_db(db_name.encode()))
 
     return getattr(g, f"db_{db_name}")
 
@@ -87,6 +87,7 @@ def stats():
     with get_env().begin(db=get_db("hit")) as txn:
         for url, hit_packed in txn.cursor():
             result[url] = struct.unpack("Q", hit_packed)[0]
+    result["total"] = sum(result.values())
     return result
 
 
@@ -95,7 +96,7 @@ def login_method():
     return { "method": get_login_method() }
 
 
-@app.route("/login", method=("POST", ))
+@app.route("/login", methods=("POST", ))
 def login():
     if not request.is_json:
         abort(404)
@@ -114,8 +115,36 @@ def login():
             return { "logged_in": "fail" }
         elif credentials[1] != hashlib.sha256(password.encode()).hexdigest():
             return { "logged_in": "fail" }
+        else:
+            session["who"] = "admin"
+            return { "logged_in": "success" }
 
 
+@app.route("/logout")
+def logout():
+    session["who"] = "noone"
+    return {}
+
+@app.route("/useragent")
+@app.route("/useragent/", defaults=dict(text=""))
+@app.route("/useragent/<text>")
+def useragent(text: str = ""):
+    if session.get("who", "noone") == "noone":
+        abort(403)
+    result = dict(result=0, total=0)
+    with get_env().begin(db=get_db("ua")) as txn:
+        for useragent, hit_packed in txn.cursor():
+            hit_unpacked: int = struct.unpack("Q", hit_packed)[0]
+            if text in useragent.decode():
+                result["result"] += hit_unpacked
+            result["total"] += hit_unpacked
+
+    return result
+
+
+@app.route("/whoami")
+def whoami():
+    return { "youare": session.get("who", "noone") }
 
 if __name__ == "__main__":
     app.run(debug=True)
