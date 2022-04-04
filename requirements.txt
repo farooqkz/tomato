@@ -1,4 +1,3 @@
 Flask
 Flask-Session
-Flask-login
-influxdb-client
+lmdb
