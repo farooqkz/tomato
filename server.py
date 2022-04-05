@@ -144,7 +144,7 @@ def useragent(text: str = ""):
 
 @app.route("/whoami")
 def whoami():
-    return { "youare": session.get("who", "noone") }
+    return { "youre": session.get("who", "noone") }
 
 if __name__ == "__main__":
     app.run(debug=True)
