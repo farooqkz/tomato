@@ -6,13 +6,18 @@ from flask import session
 from flask import abort
 from typing import Dict, Tuple, Union
 from os import urandom
+from flask_caching import Cache
 import os.path
 import lmdb
 import struct
 import hashlib
 
-secret_key = urandom(12)
+SECRET_KEY = urandom(12)
+SESSION_TYPE = "redis"
 app = Flask(__name__)
+app.config.from_object(__name__)
+cache = Cache(config={"CACHE_TYPE": "SimpleCache"})
+cache.init_app(app)
 
 def get_credentials() -> Union[None, Tuple[str, str]]:
     if os.path.exists("auth"):
@@ -81,6 +86,7 @@ def dot():
 
 @app.route("/stats")
 def stats():
+    print(session.get("who"))
     if session.get("who", "noone") == "noone":
         abort(403)
     result: Dict[str, int] = dict()
@@ -103,6 +109,7 @@ def login():
     credentials = get_credentials()
     if credentials is None:
         session["who"] = "admin"
+        print(session)
         return { "logged_in": "success"}
     else:
         username = request.json.get("username")
