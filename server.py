@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import g
-from flask import make_response
+from flask import send_file
 from flask import request
 from flask import session
 from flask import abort
@@ -40,13 +40,6 @@ def get_db(db_name):
     return getattr(g, f"db_{db_name}")
 
 
-def get_dot_png():
-    if getattr(g, "dot_png", None) is None:
-        with open("dot.png", "rb") as fp:
-            g.dot_png = fp.read()
-    return g.dot_png
-
-
 def get_login_method():
     if os.path.exists("auth"):
         return "auth"
@@ -55,8 +48,6 @@ def get_login_method():
 
 @app.route("/dot.png")
 def dot():
-    res = make_response()
-    res.headers["content-type"] = "image/png"
     url: bytes = request.headers.get("referer", "dummy").encode()
     useragent: bytes = request.headers.get("user-agent", "dummy").encode()
     hit_db = get_db("hit")
@@ -81,7 +72,7 @@ def dot():
         else:
             txn.replace(useragent, current_hit_packed)
 
-    return get_dot_png()
+    return send_file("dot.png", mimetype="image/png")
 
 
 @app.route("/stats")
