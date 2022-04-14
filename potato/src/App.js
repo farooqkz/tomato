@@ -39,6 +39,7 @@ class App extends React.Component {
       loginMethod: "",
     };
     fetch(`${API}whoami`).then(r => r.json()).then((j) => {
+      this.setState({ whoami: j.youre });
       if (j.youre === "noone") {
         fetch(`${API}login`).then(r => r.json()).then((j) => {
           this.setState({ loginMethod: j.method });
@@ -84,7 +85,7 @@ class App extends React.Component {
       return (
         <>
           {
-            Object.entires(this.data).map((entry) => {
+            Object.entries(this.data).map((entry) => {
               return <Entry url={entry[0]} hit={entry[1]} />;
             })
           }
