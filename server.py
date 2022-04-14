@@ -82,8 +82,7 @@ def stats():
     result: Dict[str, int] = dict()
     with get_env().begin(db=get_db("hit")) as txn:
         for url, hit_packed in txn.cursor():
-            print(url, hit_packed)
-            result[url] = struct.unpack("Q", hit_packed)[0]
+            result[url.decode()] = struct.unpack("Q", hit_packed)[0]
     result["total"] = sum(result.values())
     return result
 
